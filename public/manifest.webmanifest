@@ -1,0 +1,21 @@
+{
+  "name": "Royal Vivah Gardens",
+  "short_name": "Vivah Gardens",
+  "description": "Luxury wedding garden and event booking app.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#11090c",
+  "theme_color": "#5b1020",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#11090c"/>
+      <stop offset=".55" stop-color="#5b1020"/>
+      <stop offset="1" stop-color="#D4AF37"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <circle cx="960" cy="120" r="220" fill="#fff3db" opacity=".08"/>
+  <circle cx="160" cy="540" r="260" fill="#D4AF37" opacity=".13"/>
+  <text x="80" y="250" fill="#fffaf0" font-family="Georgia, serif" font-size="76">Royal Vivah Gardens</text>
+  <text x="84" y="335" fill="#fff3db" font-family="Arial, sans-serif" font-size="34">Luxury Wedding Garden and Event Booking</text>
+  <text x="84" y="410" fill="#D4AF37" font-family="Arial, sans-serif" font-size="28">Venues | Vendors | CRM | WhatsApp | AI Quotes</text>
+</svg>

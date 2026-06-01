@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex,nofollow">
+    <title>Luxury Admin Dashboard | Royal Vivah Gardens</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/css/admin.css" rel="stylesheet">
+  </head>
+  <body class="dashboard-page">
+    <div class="loading-screen" id="loadingScreen">
+      <div class="loader-ring"></div>
+      <span>Royal Vivah Gardens</span>
+    </div>
+
+    <aside class="rv-sidebar" id="rvSidebar">
+      <div class="sidebar-brand">
+        <span class="brand-mark small">RV</span>
+        <div>
+          <strong>Royal Vivah</strong>
+          <small>Luxury Admin</small>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="active" href="/admin-dashboard.html"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+        <a href="/admin-bookings.html"><i class="bi bi-calendar-check"></i> Bookings</a>
+        <a href="/admin-planner-leads.html"><i class="bi bi-stars"></i> Planner Leads</a>
+        <a href="/admin-users.html"><i class="bi bi-people"></i> Users</a>
+        <a href="/admin-gardens.html"><i class="bi bi-flower1"></i> Gardens</a>
+        <a href="/admin-services.html"><i class="bi bi-gem"></i> Wedding Services</a>
+        <a href="#vendorApprovals"><i class="bi bi-patch-check"></i> Vendor Approvals</a>
+        <a href="/admin-gallery.html"><i class="bi bi-images"></i> Gallery</a>
+        <a href="#contacts"><i class="bi bi-envelope"></i> Contacts</a>
+        <a href="/admin-reviews.html"><i class="bi bi-star"></i> Reviews</a>
+        <a href="/admin-payments.html"><i class="bi bi-credit-card"></i> Payments</a>
+        <a href="#notifications"><i class="bi bi-bell"></i> Notifications</a>
+        <a href="/admin-settings.html"><i class="bi bi-sliders"></i> Settings</a>
+        <button id="logoutBtn" type="button"><i class="bi bi-box-arrow-right"></i> Logout</button>
+      </nav>
+    </aside>
+
+    <div class="dashboard-main">
+      <header class="topbar glass-panel">
+        <button class="icon-btn d-xl-none" id="sidebarToggle" type="button" aria-label="Open menu"><i class="bi bi-list"></i></button>
+        <div class="search-shell">
+          <i class="bi bi-search"></i>
+          <input id="globalSearch" type="search" placeholder="Search bookings, users, gardens">
+        </div>
+        <div class="topbar-actions">
+          <span id="liveClock" class="clock-pill"></span>
+          <button class="icon-btn position-relative" type="button"><i class="bi bi-bell"></i><span class="notify-dot"></span></button>
+          <div class="admin-profile">
+            <span>AV</span>
+            <div>
+              <strong>Admin</strong>
+              <small>Concierge Desk</small>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="dashboard-content">
+        <section id="dashboard" class="hero-band">
+          <div>
+            <p class="eyebrow">Wedding venue command centre</p>
+            <h1>Royal Vivah Gardens Admin Dashboard</h1>
+            <p>Bookings, users, gardens, services, gallery, reviews and payment intelligence in one premium workspace.</p>
+          </div>
+          <div class="hero-stat glass-panel">
+            <span>Today</span>
+            <strong id="todayRevenue">INR 0</strong>
+            <small>Revenue pipeline</small>
+          </div>
+        </section>
+
+        <section class="overview-grid" id="overviewCards"></section>
+
+        <section id="bookings" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Booking Management</p>
+              <h2>Event Pipeline</h2>
+            </div>
+            <button class="btn gold-outline" id="exportBookings"><i class="bi bi-download"></i> Export</button>
+          </div>
+          <div class="toolbar">
+            <input class="luxury-input" id="bookingSearch" type="search" placeholder="Search bookings">
+            <select class="luxury-input" id="bookingStatusFilter">
+              <option value="">All statuses</option>
+              <option>Pending</option>
+              <option>Confirmed</option>
+              <option>Completed</option>
+              <option>Cancelled</option>
+            </select>
+          </div>
+          <div class="table-responsive">
+            <table class="table luxury-table align-middle">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Client Name</th>
+                  <th>Garden</th>
+                  <th>Event Date</th>
+                  <th>Payment Status</th>
+                  <th>Booking Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookingRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="plannerLeads" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Smart Planner</p>
+              <h2>Planner Leads</h2>
+            </div>
+            <a class="btn gold-outline" href="/admin-planner-leads.html"><i class="bi bi-box-arrow-up-right"></i> Open</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table luxury-table align-middle">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Event</th>
+                  <th>Recommended Services</th>
+                  <th>Match</th>
+                  <th>Booking Status</th>
+                  <th>Lead Status</th>
+                </tr>
+              </thead>
+              <tbody id="plannerLeadRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="users" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">User Management</p>
+              <h2>Website Leads</h2>
+            </div>
+            <button class="btn gold-outline" id="exportUsers"><i class="bi bi-filetype-csv"></i> Export</button>
+          </div>
+          <div class="toolbar">
+            <input class="luxury-input" id="userSearch" type="search" placeholder="Search users">
+            <select class="luxury-input" id="userEventFilter">
+              <option value="">All event types</option>
+              <option>Wedding</option>
+              <option>Reception</option>
+              <option>Engagement</option>
+              <option>Haldi</option>
+              <option>Mehendi</option>
+              <option>Corporate Event</option>
+            </select>
+          </div>
+          <div class="table-responsive">
+            <table class="table luxury-table align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Event Type</th>
+                  <th>Guests</th>
+                  <th>Budget</th>
+                  <th>Garden</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="gardens" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Garden Management</p>
+              <h2>Luxury Venues</h2>
+            </div>
+            <button class="btn gold-btn" data-bs-toggle="modal" data-bs-target="#gardenModal"><i class="bi bi-plus-lg"></i> Add Garden</button>
+          </div>
+          <div class="garden-grid" id="gardenCards"></div>
+        </section>
+
+        <section id="services" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Wedding Services</p>
+              <h2>Service Catalogue</h2>
+            </div>
+            <button class="btn gold-btn" data-bs-toggle="modal" data-bs-target="#serviceModal"><i class="bi bi-plus-lg"></i> Add Service</button>
+          </div>
+          <div class="service-grid" id="serviceCards"></div>
+        </section>
+
+        <section id="vendorApprovals" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Vendor Approval Management</p>
+              <h2>Pending Vendor Requests</h2>
+            </div>
+            <a class="btn gold-outline" href="/vendor/services" target="_blank"><i class="bi bi-box-arrow-up-right"></i> Public Services</a>
+          </div>
+          <div class="table-responsive">
+            <table class="table luxury-table align-middle">
+              <thead>
+                <tr>
+                  <th>Vendor</th>
+                  <th>Contact</th>
+                  <th>Category</th>
+                  <th>City</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="vendorApprovalRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="gallery" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Gallery Management</p>
+              <h2>Curated Wedding Visuals</h2>
+            </div>
+            <label class="btn gold-outline mb-0">
+              <i class="bi bi-cloud-upload"></i> Upload
+              <input id="galleryUpload" type="file" accept="image/*" multiple hidden>
+            </label>
+          </div>
+          <div class="toolbar">
+            <select class="luxury-input" id="galleryFilter">
+              <option value="">All categories</option>
+              <option>Gardens</option>
+              <option>Decoration</option>
+              <option>Catering</option>
+              <option>Bridal</option>
+            </select>
+          </div>
+          <div class="gallery-grid" id="galleryGrid"></div>
+        </section>
+
+        <section id="contacts" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Contact Management</p>
+              <h2>Messages</h2>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table luxury-table align-middle">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Phone</th>
+                  <th>Message</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="contactRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="reviews" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Review Management</p>
+              <h2>Customer Feedback</h2>
+            </div>
+          </div>
+          <div class="review-grid" id="reviewCards"></div>
+        </section>
+
+        <section id="payments" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Payments</p>
+              <h2>Revenue Analytics</h2>
+            </div>
+          </div>
+          <div class="payment-layout">
+            <div class="chart-card">
+              <canvas id="revenueCanvas" width="720" height="300"></canvas>
+            </div>
+            <div class="payment-metrics" id="paymentMetrics"></div>
+          </div>
+          <div class="table-responsive mt-4">
+            <table class="table luxury-table align-middle">
+              <thead><tr><th>Transaction</th><th>Client</th><th>Method</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody id="transactionRows"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="notifications" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Notifications</p>
+              <h2>Activity Desk</h2>
+            </div>
+          </div>
+          <div id="notificationList" class="notification-list"></div>
+        </section>
+
+        <section id="settings" class="admin-section glass-panel">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Settings</p>
+              <h2>Website Controls</h2>
+            </div>
+          </div>
+          <form id="settingsForm" class="settings-grid">
+            <input class="luxury-input" name="siteTitle" placeholder="Site title" value="Royal Vivah Gardens">
+            <input class="luxury-input" name="contact" placeholder="Contact number" value="+91 98765 43210">
+            <input class="luxury-input" name="email" placeholder="Email" value="bookings@royalvivah.example">
+            <input class="luxury-input" name="instagram" placeholder="Instagram" value="https://instagram.com/royalvivahgardens">
+            <input class="luxury-input" name="facebook" placeholder="Facebook" value="https://facebook.com/royalvivahgardens">
+            <input class="luxury-input" name="adminName" placeholder="Admin profile" value="Admin Concierge">
+            <input class="luxury-input" type="password" name="newPassword" placeholder="New password">
+            <label class="switch-row">
+              <span>Theme glow</span>
+              <input id="themeToggle" type="checkbox" checked>
+            </label>
+            <button class="btn gold-btn" type="submit"><i class="bi bi-check2-circle"></i> Save Settings</button>
+          </form>
+        </section>
+        <footer class="admin-footer">
+          <span>© 2026 Royal Vivah Gardens Admin</span>
+          <span>Connected to live MySQL admin records</span>
+          <a href="/" target="_blank">Open Website</a>
+        </footer>
+      </main>
+    </div>
+
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content luxury-modal">
+          <div class="modal-header">
+            <h5 class="modal-title" id="detailTitle">Details</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="detailBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="gardenModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content luxury-modal" id="gardenForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Garden Details</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body form-grid">
+            <input class="luxury-input" name="name" placeholder="Garden name" required>
+            <input class="luxury-input" name="capacity" placeholder="Capacity" required>
+            <input class="luxury-input" name="pricing" placeholder="Pricing" required>
+            <textarea class="luxury-input" name="description" placeholder="Description" rows="3" required></textarea>
+            <input class="luxury-input" name="features" placeholder="Features comma separated">
+            <label class="upload-box">
+              <i class="bi bi-images"></i>
+              <span>Upload multiple garden images</span>
+              <input name="imageFiles" type="file" accept="image/*" multiple>
+            </label>
+            <input class="luxury-input" name="images" placeholder="Image URLs comma separated">
+          </div>
+          <div class="modal-footer">
+            <button class="btn gold-btn" type="submit">Save Garden</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="modal fade" id="serviceModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <form class="modal-content luxury-modal" id="serviceForm">
+          <div class="modal-header">
+            <h5 class="modal-title">Service Details</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body form-grid">
+            <input class="luxury-input" name="name" placeholder="Service name" required>
+            <select class="luxury-input" name="category" required>
+              <option value="">Select category</option>
+              <option>Gardens</option>
+              <option>Decoration</option>
+              <option>DJ Band</option>
+              <option>Makeup Artists</option>
+              <option>Pandit Ji</option>
+              <option>Anchor</option>
+              <option>Caterers</option>
+              <option>Car & Bus</option>
+              <option>Photography</option>
+              <option>Mehendi Artists</option>
+            </select>
+            <input class="luxury-input" name="pricing" placeholder="Pricing" required>
+            <textarea class="luxury-input" name="description" placeholder="Description" rows="3" required></textarea>
+            <label class="upload-box">
+              <i class="bi bi-image"></i>
+              <span>Upload service images</span>
+              <input name="imageFiles" type="file" accept="image/*" multiple>
+            </label>
+            <input class="luxury-input" name="image" placeholder="Image URL, optional when uploading">
+          </div>
+          <div class="modal-footer">
+            <button class="btn gold-btn" type="submit">Save Service</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div id="adminToast" class="toast luxury-toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-body"></div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/admin.js"></script>
+  </body>
+</html>
