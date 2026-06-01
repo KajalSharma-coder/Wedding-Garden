@@ -15,7 +15,7 @@ import { galleryUpload as galleryFileUpload, publicPath, serviceUpload, vendorUp
 import { listFromText, slugify, first } from "./utils";
 
 const app = express();
-const port = Number(process.env.API_PORT || 4000);
+const port = Number(process.env.PORT || process.env.API_PORT || 4000);
 const SERVICE_TABLE = "services";
 const INQUIRY_TABLE = "inquiries";
 const AVAILABILITY_TABLE = "availability";
