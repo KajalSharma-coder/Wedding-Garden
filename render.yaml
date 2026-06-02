@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: npm start
     autoDeploy: true
     envVars:
@@ -30,7 +30,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm ci
+    buildCommand: npm ci --include=dev
     startCommand: npm run api:start
     healthCheckPath: /health
     autoDeploy: true
