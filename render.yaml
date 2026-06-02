@@ -1,10 +1,32 @@
 services:
   - type: web
+    name: wedding-garden-web
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SITE_URL
+        sync: false
+      - key: NEXT_PUBLIC_API_BASE
+        sync: false
+      - key: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_GA_ID
+        sync: false
+      - key: NEXT_PUBLIC_META_PIXEL_ID
+        sync: false
+
+  - type: web
     name: wedding-garden-api
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm install
+    buildCommand: npm ci
     startCommand: npm run api:start
     healthCheckPath: /health
     autoDeploy: true

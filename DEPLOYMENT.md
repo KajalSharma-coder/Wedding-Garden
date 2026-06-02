@@ -2,9 +2,33 @@
 
 This project is split into two production services:
 
-- Frontend: Vercel, connected to GitHub
+- Frontend: Render web service or Vercel, connected to GitHub
 - Backend API: Render, connected to GitHub using `render.yaml`
 - Database: external MySQL provider such as Railway, Aiven, PlanetScale, DigitalOcean, or a VPS MySQL instance
+
+## Render Frontend
+
+1. Open Render and create a new Blueprint.
+2. Connect the GitHub repository: `KajalSharma-coder/Wedding-Garden`.
+3. Render will detect `render.yaml` and create `wedding-garden-web`.
+4. Confirm the frontend service uses these commands:
+
+```text
+Build command: npm ci && npm run build
+Start command: npm start
+```
+
+5. Add frontend environment variables:
+
+```text
+NEXT_PUBLIC_SITE_URL=https://your-render-frontend.onrender.com
+NEXT_PUBLIC_API_BASE=https://your-render-api.onrender.com/api
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=
+NEXT_PUBLIC_GA_ID=
+NEXT_PUBLIC_META_PIXEL_ID=
+```
+
+`npm start` runs `next start`, which requires a production build in `.next`. Render must run the build command before starting the service.
 
 ## Render Backend
 
