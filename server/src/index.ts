@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
@@ -21,12 +21,28 @@ const SERVICE_TABLE = "services";
 const INQUIRY_TABLE = "inquiries";
 const AVAILABILITY_TABLE = "availability";
 
-const webOrigin = process.env.WEB_ORIGIN || (isProduction ? "" : "http://localhost:3000");
-if (isProduction && !webOrigin) {
-  throw new Error("WEB_ORIGIN is required in production.");
-}
+const allowedOrigins = [
+  "https://wedding-garden.vercel.app",
+  "https://wedding-garden.onrender.com",
+  "http://localhost:3000",
+  "http://localhost:4000"
+];
 
-app.use(cors({ origin: webOrigin, credentials: true }));
+const corsOptions: CorsOptions = {
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
