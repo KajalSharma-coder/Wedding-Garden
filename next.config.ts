@@ -1,5 +1,8 @@
 import type { NextConfig } from "next";
 
+const apiBase = process.env.NEXT_PUBLIC_API_BASE;
+const apiOrigin = apiBase ? new URL(apiBase).origin : "";
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
@@ -30,6 +33,22 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [];
+  },
+  async rewrites() {
+    if (!apiBase || !apiOrigin) {
+      return [];
+    }
+
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${apiBase}/:path*`
+      },
+      {
+        source: "/uploads/:path*",
+        destination: `${apiOrigin}/uploads/:path*`
+      }
+    ];
   }
 };
 

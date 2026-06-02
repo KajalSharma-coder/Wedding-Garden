@@ -1,5 +1,10 @@
-export const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000/api";
+const configuredApiBase = process.env.NEXT_PUBLIC_API_BASE;
+
+if (process.env.NODE_ENV === "production" && !configuredApiBase) {
+  throw new Error("NEXT_PUBLIC_API_BASE is required in production.");
+}
+
+export const API_BASE = configuredApiBase || "http://localhost:4000/api";
 
 export const SERVICE_API = `${API_BASE}/services`;
 export const BOOKING_API = `${API_BASE}/bookings`;

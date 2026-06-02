@@ -16,6 +16,10 @@ services:
         sync: false
       - key: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
         sync: false
+      - key: GOOGLE_PLACES_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_RAZORPAY_CHECKOUT_URL
+        sync: false
       - key: NEXT_PUBLIC_GA_ID
         sync: false
       - key: NEXT_PUBLIC_META_PIXEL_ID
@@ -47,6 +51,8 @@ services:
         sync: false
       - key: ADMIN_PASSWORD
         sync: false
+      - key: ADMIN_PASSWORD_HASH
+        sync: false
       - key: DB_HOST
         sync: false
       - key: DB_PORT
@@ -66,4 +72,18 @@ services:
       - key: WHATSAPP_PHONE_NUMBER_ID
         sync: false
       - key: WHATSAPP_TOKEN
+        sync: false
+      - key: PHONEPE_MERCHANT_ID
+        sync: false
+      - key: PHONEPE_SALT_KEY
+        sync: false
+      - key: PAYTM_MID
+        sync: false
+      - key: PAYTM_KEY
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
         sync: false

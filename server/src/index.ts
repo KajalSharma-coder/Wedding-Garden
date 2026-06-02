@@ -16,18 +16,28 @@ import { listFromText, slugify, first } from "./utils";
 
 const app = express();
 const port = Number(process.env.PORT || process.env.API_PORT || 4000);
+const isProduction = process.env.NODE_ENV === "production";
 const SERVICE_TABLE = "services";
 const INQUIRY_TABLE = "inquiries";
 const AVAILABILITY_TABLE = "availability";
 
-app.use(cors({ origin: process.env.WEB_ORIGIN || "http://localhost:3000", credentials: true }));
+const webOrigin = process.env.WEB_ORIGIN || (isProduction ? "" : "http://localhost:3000");
+if (isProduction && !webOrigin) {
+  throw new Error("WEB_ORIGIN is required in production.");
+}
+
+app.use(cors({ origin: webOrigin, credentials: true }));
 app.use(express.json({ limit: "5mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.resolve(process.cwd(), "uploads")));
 
-const adminEmail = (process.env.ADMIN_EMAIL || "admin@royalvivah.com").toLowerCase();
-const adminPassword = process.env.ADMIN_PASSWORD || "Royal@2026";
+const adminEmail = (process.env.ADMIN_EMAIL || (isProduction ? "" : "admin@royalvivah.com")).toLowerCase();
+const adminPassword = process.env.ADMIN_PASSWORD || (isProduction ? "" : "Royal@2026");
 const adminPasswordHash = process.env.ADMIN_PASSWORD_HASH || null;
+
+if (isProduction && (!adminEmail || (!adminPassword && !adminPasswordHash))) {
+  throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD or ADMIN_PASSWORD_HASH are required in production.");
+}
 
 app.post("/api/admin/login", asyncHandler(async (req, res) => {
   const body = req.body || {};

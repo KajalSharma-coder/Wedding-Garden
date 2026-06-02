@@ -1,13 +1,23 @@
 import "dotenv/config";
 import mysql from "mysql2/promise";
 
-const database = process.env.DB_NAME || "booking";
+const isProduction = process.env.NODE_ENV === "production";
+
+function requiredEnv(name: string, fallback = "") {
+  const value = process.env[name] || fallback;
+  if (isProduction && !value) {
+    throw new Error(`${name} is required in production.`);
+  }
+  return value;
+}
+
+const database = requiredEnv("DB_NAME", "booking");
 
 const baseConfig = {
-  host: process.env.DB_HOST || "localhost",
+  host: requiredEnv("DB_HOST", "localhost"),
   port: Number(process.env.DB_PORT || 3306),
-  user: process.env.DB_USER || "root",
-  password: process.env.DB_PASSWORD || "",
+  user: requiredEnv("DB_USER", "root"),
+  password: requiredEnv("DB_PASSWORD"),
   waitForConnections: true,
   connectionLimit: Number(process.env.DB_CONNECTION_LIMIT || 10),
   queueLimit: 0,

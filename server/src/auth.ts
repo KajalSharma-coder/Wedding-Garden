@@ -2,8 +2,12 @@ import type { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { fail } from "./http";
 
-const secret = process.env.JWT_SECRET || "royal_booking_secret";
 const isProduction = process.env.NODE_ENV === "production";
+const secret = process.env.JWT_SECRET || (isProduction ? "" : "royal_booking_secret");
+
+if (isProduction && !secret) {
+  throw new Error("JWT_SECRET is required in production.");
+}
 
 export type AuthUser = {
   id: number;
@@ -72,4 +76,3 @@ export function requireAuth(role?: AuthUser["role"]) {
     }
   };
 }
-

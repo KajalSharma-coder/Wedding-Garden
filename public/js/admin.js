@@ -1,9 +1,7 @@
 (function () {
   "use strict";
 
-  const API_BASE =
-    window.RVG_API_BASE ||
-    `${window.location.protocol}//${window.location.hostname}:4000`;
+  const API_BASE = window.RVG_API_BASE || "";
   const state = {
     loading: true,
     error: "",
@@ -102,7 +100,7 @@
 
   function mediaUrl(value) {
     const image = String(value || "");
-    if (image.startsWith("/uploads/")) return `${API_BASE}${image}`;
+    if (image.startsWith("/uploads/")) return image;
     return image || "/og.svg";
   }
 
