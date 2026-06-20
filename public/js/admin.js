@@ -681,6 +681,10 @@
         const [type, value] = String(button.dataset.action || "").split(":");
         const id = button.dataset.id;
         const source = button.dataset.source;
+        const service =
+          type === "service"
+            ? state.services.find((item) => String(item.id) === String(id))
+            : null;
         try {
           button.disabled = true;
           if (type === "vendor")
@@ -697,8 +701,17 @@
             type === "service" &&
             value === "delete" &&
             confirm("Delete this service?")
-          )
-            await api(`/api/admin/services/${id}`, { method: "DELETE" });
+          ) {
+            if (!service) {
+              throw new Error(
+                "Service was not found in the current admin data. Refresh and try again.",
+              );
+            }
+            console.log("Deleting service:", service);
+            await api(`/api/admin/services/${service.id}`, {
+              method: "DELETE",
+            });
+          }
           if (type === "contact")
             await api(`/api/admin/contact-inquiries/${source}/${id}`, {
               method: "PATCH",

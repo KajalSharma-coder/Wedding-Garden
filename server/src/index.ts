@@ -1283,8 +1283,9 @@ app.patch("/api/admin/services/:id", asyncHandler(async (req, res) => {
 app.delete("/api/admin/services/:id", asyncHandler(async (req, res) => {
   const service = first<any>(await query("SELECT id FROM services WHERE id = ? LIMIT 1", [req.params.id]));
   if (!service) return fail(res, 404, "Service not found.");
-  await pool.execute("DELETE FROM services WHERE id = ?", [req.params.id]);
-  return ok(res, { message: "Service deleted." });
+  const [result] = await pool.execute<ResultSetHeader>("DELETE FROM services WHERE id = ?", [service.id]);
+  if (result.affectedRows === 0) return fail(res, 404, "Service not found.");
+  return ok(res, { message: "Service deleted.", id: service.id });
 }));
 
 app.get("/api/admin/bookings", asyncHandler(async (_req, res) => {
