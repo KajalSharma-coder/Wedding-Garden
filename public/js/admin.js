@@ -1,7 +1,12 @@
 (function () {
   "use strict";
 
-  const API_BASE = window.RVG_API_BASE || "";
+  function normalizeConfiguredApiBase(value) {
+    const raw = String(value || "").trim().replace(/\/+$/, "");
+    return raw.replace(/\/api$/i, "");
+  }
+
+  const API_BASE = normalizeConfiguredApiBase(window.RVG_API_BASE);
   const state = {
     loading: true,
     error: "",
@@ -110,7 +115,7 @@
   }
 
   if (image.startsWith("/uploads/")) {
-    return "https://wedding-garden.onrender.com" + image;
+    return (API_BASE || window.location.origin) + image;
   }
 
   return image;
@@ -133,7 +138,16 @@
       ...options,
     });
     const text = await response.text();
-    const payload = text ? JSON.parse(text) : {};
+    let payload = {};
+    try {
+      payload = text ? JSON.parse(text) : {};
+    } catch {
+      throw new Error(
+        text
+          ? `Backend returned a non-JSON response: ${text.replace(/\s+/g, " ").trim().slice(0, 180)}`
+          : `Backend returned an empty response for ${path}`,
+      );
+    }
     if (!response.ok || payload.ok === false) {
       throw new Error(payload.message || `Request failed: ${path}`);
     }

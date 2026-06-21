@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { CalendarDays } from "lucide-react";
+import { API_BASE } from "@/lib/api-client";
 
 type Day = { date: string; status: "available" | "blocked" | "booked" | "unknown" };
 
@@ -27,7 +28,7 @@ export default function AvailabilityCalendar({ slug, blockedDates = [] }: { slug
     let mounted = true;
     async function fetchAvailability() {
       try {
-        const res = await fetch(`/api/venues/${encodeURIComponent(slug)}/availability`);
+        const res = await fetch(`${API_BASE}/venues/${encodeURIComponent(slug)}/availability`);
         if (!mounted) return;
         if (!res.ok) return;
         const json = await res.json();

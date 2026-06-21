@@ -1,5 +1,6 @@
 import "dotenv/config";
 import mysql from "mysql2/promise";
+import type { Connection } from "mysql2/promise";
 
 const isProduction = process.env.NODE_ENV === "production";
 
@@ -34,15 +35,38 @@ export const pool = mysql.createPool({
 export async function ensureDatabase() {
   if (bootstrapped) return;
 
-  const bootstrap = await mysql.createConnection(baseConfig);
-  await bootstrap.query(
-    `CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
-  );
-  await bootstrap.end();
-  bootstrapped = true;
+  let bootstrap: Connection | null = null;
+  try {
+    bootstrap = await mysql.createConnection(baseConfig);
+    await bootstrap.query(
+      `CREATE DATABASE IF NOT EXISTS \`${database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci`
+    );
+    bootstrapped = true;
+  } catch (error) {
+    console.error("[db] failed to initialize database", {
+      host: baseConfig.host,
+      port: baseConfig.port,
+      user: baseConfig.user,
+      database,
+      error
+    });
+    throw error;
+  } finally {
+    await bootstrap?.end().catch((error) => {
+      console.warn("[db] failed to close bootstrap connection", { error });
+    });
+  }
 }
 
 export async function query<T = any>(sql: string, params: any[] = []) {
-  const [rows] = await pool.execute(sql, params);
-  return rows as T[];
+  try {
+    const [rows] = await pool.execute(sql, params);
+    return rows as T[];
+  } catch (error) {
+    console.error("[db] query failed", {
+      statement: sql.replace(/\s+/g, " ").trim().slice(0, 240),
+      error
+    });
+    throw error;
+  }
 }

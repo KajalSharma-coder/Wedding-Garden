@@ -65,17 +65,20 @@ export function requireAuth(role?: AuthUser["role"]) {
     const token = bearer || cookieValue(req.header("cookie"), "rvg_token");
 
     if (!token) {
+      console.warn("[auth] missing token", { path: req.originalUrl, role: role || "any" });
       return fail(res, 401, role === "admin" ? "Admin login required" : "Vendor login required");
     }
 
     try {
       const user = jwt.verify(token, secret) as AuthUser;
       if (role && user.role !== role) {
+        console.warn("[auth] role denied", { path: req.originalUrl, expected: role, actual: user.role, email: user.email });
         return fail(res, 403, "Access denied");
       }
       req.user = user;
       next();
-    } catch {
+    } catch (error) {
+      console.warn("[auth] invalid token", { path: req.originalUrl, role: role || "any", error });
       return fail(res, 401, role === "admin" ? "Admin login required" : "Vendor login required");
     }
   };
