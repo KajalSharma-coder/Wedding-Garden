@@ -22,7 +22,7 @@ const INQUIRY_TABLE = "inquiries";
 const AVAILABILITY_TABLE = "availability";
 
 const allowedOrigins = [
-  "https://wedding-garden.vercel.app",
+  "https://wedding-garden-1.vercel.app/",
   "https://wedding-garden.onrender.com",
   "http://localhost:3000",
   "http://localhost:4000"
