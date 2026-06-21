@@ -39,7 +39,7 @@ export function signToken(user: AuthUser) {
 export function setAuthCookie(res: Response, token: string, remember = true) {
   const cookieOptions = {
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: isProduction ? "none" : "lax",
     secure: isProduction,
     path: "/",
   } as Record<string, unknown>;
@@ -52,7 +52,11 @@ export function setAuthCookie(res: Response, token: string, remember = true) {
 }
 
 export function clearAuthCookie(res: Response) {
-  res.clearCookie("rvg_token", { sameSite: "lax", secure: isProduction, path: "/" });
+  res.clearCookie("rvg_token", {
+  sameSite: isProduction ? "none" : "lax",
+  secure: isProduction,
+  path: "/"
+});
 }
 
 export function requireAuth(role?: AuthUser["role"]) {

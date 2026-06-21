@@ -98,11 +98,23 @@
     return `<span class="status-pill ${statusClass(status)}">${escapeHtml(status || "pending")}</span>`;
   }
 
-  function mediaUrl(value) {
-    const image = String(value || "");
-    if (image.startsWith("/uploads/")) return image;
-    return image || "/og.svg";
+ function mediaUrl(value) {
+  const image = String(value || "");
+
+  if (!image) {
+    return "/og.svg";
   }
+
+  if (image.startsWith("http")) {
+    return image;
+  }
+
+  if (image.startsWith("/uploads/")) {
+    return "https://wedding-garden.onrender.com" + image;
+  }
+
+  return image;
+}
 
   function toast(message) {
     const node = $("#adminToast");
