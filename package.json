@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-  "node": "20.x"
-},
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "concurrently \"npm run dev:web\" \"npm run dev:api\"",
     "dev:web": "next dev -p 3000",
