@@ -886,6 +886,8 @@
   function initLogin() {
     const form = $("#adminLoginForm");
     if (!form) return false;
+    const submitButton = $("#adminLoginSubmit", form);
+    const alert = $("#loginAlert", form);
     $(".password-toggle")?.addEventListener("click", () => {
       const password = $("#adminPassword");
       if (password)
@@ -893,9 +895,27 @@
     });
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (!form.checkValidity()) {
+        form.classList.add("was-validated");
+        form.reportValidity();
+        if (alert) {
+          alert.textContent = "Enter a valid admin email and password.";
+          alert.classList.remove("d-none");
+        }
+        return;
+      }
+
       const email = $("#adminEmail")?.value.trim();
       const password = $("#adminPassword")?.value;
       const remember = $("#rememberAdmin")?.checked || false;
+      const originalButtonHtml = submitButton?.innerHTML;
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.setAttribute("aria-busy", "true");
+        submitButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Signing in...';
+      }
+      if (alert) alert.classList.add("d-none");
 
       try {
         await api("/api/admin/login", {
@@ -904,13 +924,20 @@
         });
         window.location.href = "/admin-dashboard.html";
       } catch (error) {
-        const alert = $("#loginAlert");
         if (alert) {
           alert.textContent =
-            error instanceof Error
+            error instanceof TypeError
+              ? "We could not reach the admin service. Please try again."
+              : error instanceof Error
               ? error.message
               : "Invalid admin credentials.";
           alert.classList.remove("d-none");
+        }
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.removeAttribute("aria-busy");
+          submitButton.innerHTML = originalButtonHtml;
         }
       }
     });
