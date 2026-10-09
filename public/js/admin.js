@@ -6,7 +6,14 @@
     return raw.replace(/\/api$/i, "");
   }
 
-  const API_BASE = normalizeConfiguredApiBase(window.RVG_API_BASE);
+  function fallbackApiBase() {
+    if (window.location.hostname.endsWith(".vercel.app")) {
+      return "https://wedding-garden.onrender.com";
+    }
+    return "";
+  }
+
+  const API_BASE = normalizeConfiguredApiBase(window.RVG_API_BASE) || fallbackApiBase();
   const state = {
     loading: true,
     error: "",

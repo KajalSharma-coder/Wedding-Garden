@@ -7,6 +7,33 @@ import { Nav } from "@/components/nav";
 import { GhostButton, PrimaryButton, SectionHeading } from "@/components/ui";
 import AvailabilityCalendar from "@/components/availability-calendar";
 import { gallery, venues } from "@/lib/data";
+import { getMarketplaceServiceBySlug } from "@/lib/marketplace-store";
+
+type VenueDetails = (typeof venues)[number];
+
+async function getVenueBySlug(slug: string): Promise<VenueDetails | undefined> {
+  const localVenue = venues.find((item) => item.slug === slug);
+  if (localVenue) return localVenue;
+
+  const service = await getMarketplaceServiceBySlug(slug);
+  if (!service || service.category.toLowerCase() !== "gardens") return undefined;
+
+  return {
+    slug: service.slug,
+    name: service.name,
+    image: service.image,
+    location: service.location,
+    capacity: service.capacity || "Capacity available on request",
+    price: service.pricing,
+    amenities: service.features,
+    parking: "Available on request",
+    rooms: "Available on request",
+    ac: "Indoor and outdoor options available",
+    lawn: "Available on request",
+    catering: service.availability || "Contact venue for catering policy",
+    blockedDates: []
+  };
+}
 
 export function generateStaticParams() {
   return venues.map((venue) => ({ slug: venue.slug }));
@@ -14,7 +41,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const venue = venues.find((item) => item.slug === slug);
+  const venue = await getVenueBySlug(slug);
   return {
     title: venue ? `${venue.name} Venue Details, Pricing and Booking` : "Venue Details",
     description: venue ? `${venue.name} in ${venue.location}: capacity, pricing, media, amenities and online booking.` : undefined
@@ -23,7 +50,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function VenuePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const venue = venues.find((item) => item.slug === slug);
+  const venue = await getVenueBySlug(slug);
   if (!venue) notFound();
 
   const facts = [

@@ -208,7 +208,7 @@ export default async function Home() {
             />
             <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
               {home.featuredVenues.slice(0, 3).map((venue: any, index: number) => (
-                <Link key={venue.slug || venue.id} href={venue.name ? `/venues/${venue.slug}` : `/services/gardens/${venue.slug || venue.id}`} className="group overflow-hidden rounded-[8px] border border-white/12 bg-white/[0.04] shadow-2xl shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-gold/55">
+                <Link key={venue.slug || venue.id} href={`/venues/${venue.slug || venue.id}`} className="group overflow-hidden rounded-[8px] border border-white/12 bg-white/[0.04] shadow-2xl shadow-black/20 transition duration-300 hover:-translate-y-1 hover:border-gold/55">
                   <div className="relative h-80">
                     <LocalMedia src={featuredVenueImages[index % featuredVenueImages.length] || serviceImage(venue)} alt={serviceName(venue)} className="h-full transition duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-transparent" />

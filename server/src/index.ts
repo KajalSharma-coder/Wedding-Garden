@@ -47,6 +47,8 @@ const localOrigins = [
 
 const allowedOrigins = Array.from(new Set([
   ...localOrigins,
+  "https://wedding-garden-1.vercel.app",
+  "https://wedding-garden.vercel.app",
   ...envOrigins("WEB_ORIGIN"),
   ...envOrigins("API_ORIGIN"),
   ...envOrigins("RENDER_EXTERNAL_URL")
@@ -96,28 +98,19 @@ app.post("/api/admin/login", asyncHandler(async (req, res) => {
   const remember = Boolean(body.remember);
 
   if (!email || !password) {
-    console.warn("[auth:admin-login] missing credentials", { emailPresent: Boolean(email) });
     return fail(res, 422, "Email and password are required.");
   }
 
-  let validPassword = false;
-  try {
-    validPassword = adminPasswordHash
-      ? await bcrypt.compare(password, adminPasswordHash)
-      : password === adminPassword;
-  } catch (error) {
-    console.error("[auth:admin-login] password verification failed", { email, error });
-    throw error;
-  }
+  const validPassword = adminPasswordHash
+    ? await bcrypt.compare(password, adminPasswordHash)
+    : password === adminPassword;
 
   if (email !== adminEmail || !validPassword) {
-    console.warn("[auth:admin-login] invalid credentials", { email });
     return fail(res, 401, "Invalid admin credentials.");
   }
 
   const token = signToken({ id: 0, role: "admin", email: adminEmail });
   setAuthCookie(res, token, remember);
-  console.info("[auth:admin-login] success", { email: adminEmail, remember });
   return ok(res, { message: "Admin login successful." });
 }));
 
@@ -464,8 +457,6 @@ async function buildPlannerMatch(input: PlannerInput) {
     recommendedPackage
   };
 }
-
-app.get("/", (_req, res) => ok(res, { status: "ok", service: "Royal Vivah API" }));
 
 app.get("/health", (_req, res) => ok(res, { message: "Node API is running" }));
 
@@ -1855,28 +1846,15 @@ app.get("/api/gardens/:placeId", asyncHandler(async (req, res) => {
   });
 }));
 
-app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
-  const status = Number(err?.status || err?.statusCode || 500);
-  const context = {
-    method: req.method,
-    path: req.originalUrl,
-    origin: req.header("origin"),
-    status
-  };
-
-  if (err?.message === "Not allowed by CORS") {
-    console.warn("[cors] request rejected", context);
-    return fail(res, 403, "Not allowed by CORS");
-  }
-
-  console.error("[express:error]", context, err);
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(err);
   if (err instanceof multer.MulterError) {
     const message = err.code === "LIMIT_FILE_SIZE"
       ? "Uploaded file is too large. Please upload files up to 12MB each."
       : err.message;
     return fail(res, 413, message);
   }
-  return fail(res, status >= 400 && status < 600 ? status : 500, status >= 500 ? "Server error" : err?.message || "Request failed");
+  return fail(res, 500, err?.message || "Server error");
 });
 
 async function start() {
